@@ -2,7 +2,7 @@
 다음의 내용을 구현하고 있는 간단한 방명록 웹 어플리케이션 입니다. 
 
 
-개발환경 :  Tomcat 7, JDK 7, Oracle 10g XE, Maven
+개발환경 :  Tomcat 7, JDK 7, MySQL5 innodb설정., Maven
 
 처음 실행할때는 /src/main/resources 아래의 dbpool-context.xml 파일의 내용중  
 
@@ -52,8 +52,3 @@ ejs.js 템플릿 엔진 적용
 
 summernote 에디터 적용.
 
-
-oracle 10g xe 에서 테스트. 
-
-
-감사한 분들 : 박재성님(자바지기님), 김영한님, 기타 수많은 분들.
