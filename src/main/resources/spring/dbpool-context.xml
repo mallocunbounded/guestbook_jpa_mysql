@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+	http://www.springframework.org/schema/jdbc
+	http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+	http://www.springframework.org/schema/data/jpa
+	http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<context:component-scan base-package="kr.co.sunnyvale" />
+	<jpa:repositories base-package="kr.co.sunnyvale" />	
+	<jpa:repositories base-package="kr.co.sunnyvale" />	
+	
+	<!-- datasource -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<value>classpath:/spring/dbpool.properties</value>
+		</property>
+	</bean>
+	
+ <!-- 
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		p:driverClass="${jdbc.driverClass}" 
+		p:jdbcUrl="${jdbc.url}" 
+		p:user="${jdbc.username}" 
+		p:password="${jdbc.password}"
+		p:idleConnectionTestPeriod="14400"
+		p:maxIdleTime="25200"
+		destroy-method="close" />	
+ -->
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driverClass}"/>
+		<property name="url">
+			<value>${jdbc.url}</value>
+		</property>
+		<property name="username">
+			<value>${jdbc.username}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc.password}</value>
+		</property>
+	</bean>
+
+	<!-- 
+    <jdbc:initialize-database data-source="dataSource">
+    	<jdbc:script location="classpath:/spring/start_ddl.sql" />
+    	<jdbc:script location="classpath:/spring/start_data.sql" />
+    </jdbc:initialize-database>
+  	-->
+  	
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+ 
+ 	<bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+ 
+ 	<!-- 
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+	    <property name="dataSource" ref="dataSource"/>
+	    <property name="jpaProperties">
+    	    <props>
+            	<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+            	<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+            	<prop key="hibernate.show_sql">true</prop>
+            	<prop key="hibernate.hbm2ddl.auto">update</prop>
+            	<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+        	</props>
+    	</property>
+  	
+    	<property name="jpaDialect" ref="jpaDialect"/>
+	</bean>
+	-->
+	
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+		p:persistenceXmlLocation="classpath:META-INF/persistence.xml"
+		p:persistenceUnitName="guestbook_jpa_mysql" p:dataSource-ref="dataSource"
+		p:jpaDialect-ref="jpaDialect" />
+</beans>
